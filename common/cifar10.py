@@ -1,46 +1,32 @@
-"""Download and load the CIFAR-10 dataset.
+"""Load the CIFAR-10 dataset.
 
 Shared by every assignment in this repo, so they all read the data the same way.
 
 CIFAR-10: 60,000 colour images of size 32x32 in 10 classes.
 Official split: 50,000 training images and 10,000 test images.
 Source: https://www.cs.toronto.edu/~kriz/cifar.html
+
+Reference:
+    Krizhevsky, A. (2009). Learning Multiple Layers of Features from Tiny Images.
+    Technical Report, University of Toronto.
+
+The data is downloaded manually (the "python version") and the extracted
+cifar-10-batches-py/ folder is placed in data/. It is not committed to the repo
+(data/ is in .gitignore).
 """
 
 import pickle
-import tarfile
-import urllib.request
 from pathlib import Path
 
 import numpy as np
 
-URL = "https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz"
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = REPO_ROOT / "data"
-EXTRACTED_DIR = DATA_DIR / "cifar-10-batches-py"
 
 CLASS_NAMES = [
     "airplane", "automobile", "bird", "cat", "deer",
     "dog", "frog", "horse", "ship", "truck",
 ]
-
-
-def download(data_dir=DATA_DIR):
-    """Download and extract the dataset into data/ if it is not there yet."""
-    data_dir.mkdir(parents=True, exist_ok=True)
-    extracted = data_dir / "cifar-10-batches-py"
-    if extracted.exists():
-        return extracted
-
-    archive = data_dir / "cifar-10-python.tar.gz"
-    if not archive.exists():
-        print(f"Downloading CIFAR-10 (~163 MB) from {URL} ...")
-        urllib.request.urlretrieve(URL, archive)
-
-    print("Extracting ...")
-    with tarfile.open(archive, "r:gz") as tar:
-        tar.extractall(data_dir, filter="data")
-    return extracted
 
 
 def _load_batch(path):
@@ -58,7 +44,13 @@ def load_cifar10(data_dir=DATA_DIR):
     Use to_images() to get them as (N, 32, 32, 3).
     y_* are int64 arrays of shape (N,) with labels 0..9 (see CLASS_NAMES).
     """
-    folder = download(data_dir)
+    folder = data_dir / "cifar-10-batches-py"
+    if not folder.exists():
+        raise FileNotFoundError(
+            f"CIFAR-10 not found in {folder}. Download the python version from "
+            "https://www.cs.toronto.edu/~kriz/cifar.html, extract it and place "
+            "the cifar-10-batches-py/ folder in data/."
+        )
 
     xs, ys = [], []
     for i in range(1, 6):

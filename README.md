@@ -12,7 +12,8 @@ All work uses the **CIFAR-10** dataset (10 classes, 32×32 colour images, 50,000
 | [`assignment-2/`](assignment-2/) | TBA | |
 | [`assignment-3/`](assignment-3/) | TBA | |
 | [`common/`](common/) | Code shared by all assignments (dataset loading) | |
-| `data/` | Dataset, downloaded automatically on first run (not in git) | |
+| `data/` | CIFAR-10 dataset (not in git, see [How to get the data](#how-to-get-the-data)) | |
+| [`report/`](report/) | Material for the written reports (references) | |
 
 ## Setup
 
@@ -23,4 +24,22 @@ pip install -r requirements.txt
 ```
 
 Run scripts from the repo root, e.g. `python interim/knn_ncc.py`.
-The first run downloads CIFAR-10 (~163 MB) into `data/`.
+
+## Dataset
+
+This project uses the CIFAR-10 dataset [1]: 60,000 colour images of size 32×32
+in 10 classes, with the official split of 50,000 training and 10,000 test images.
+Website: https://www.cs.toronto.edu/~kriz/cifar.html
+
+### How to get the data
+
+1. Download the **CIFAR-10 python version** (`cifar-10-python.tar.gz`) from the website above.
+2. Extract it.
+3. Place the `cifar-10-batches-py/` folder in `data/`, so you have
+   `data/cifar-10-batches-py/data_batch_1`, ..., `data_batch_5` and `test_batch`.
+
+The dataset is not committed to the repo (`data/` is in `.gitignore`).
+
+## References
+
+[1] Krizhevsky, A. (2009). *Learning Multiple Layers of Features from Tiny Images*. Technical Report, University of Toronto.
