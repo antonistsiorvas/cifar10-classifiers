@@ -1,6 +1,6 @@
 # Neural Networks & Deep Learning
 
-Coursework for the course «Νευρωνικά Δίκτυα – Βαθιά Μάθηση».
+Coursework for the course «Neural Networks - Deep Learning» at Aristotle University of Thessaloniki (AUTh).
 All work uses the **CIFAR-10** dataset (10 classes, 32×32 colour images, 50,000 train / 10,000 test).
 
 ## Structure
