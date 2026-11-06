@@ -1,0 +1,73 @@
+classifier,setting,test_index,true_label,predicted_label,correct
+1-NN,raw,903,dog,dog,yes
+1-NN,raw,7738,bird,bird,yes
+1-NN,raw,4388,bird,airplane,no
+1-NN,raw,4330,truck,dog,no
+3-NN,raw,904,ship,ship,yes
+3-NN,raw,7648,airplane,airplane,yes
+3-NN,raw,4452,bird,cat,no
+3-NN,raw,4386,frog,deer,no
+NCC,raw,861,frog,frog,yes
+NCC,raw,7683,airplane,airplane,yes
+NCC,raw,4409,ship,dog,no
+NCC,raw,4349,airplane,automobile,no
+1-NN,PCA 20,948,cat,cat,yes
+1-NN,PCA 20,7757,frog,frog,yes
+1-NN,PCA 20,4393,cat,deer,no
+1-NN,PCA 20,4321,dog,ship,no
+3-NN,PCA 20,897,horse,horse,yes
+3-NN,PCA 20,7789,cat,cat,yes
+3-NN,PCA 20,4383,deer,bird,no
+3-NN,PCA 20,4326,horse,bird,no
+NCC,PCA 20,875,ship,ship,yes
+NCC,PCA 20,7690,frog,frog,yes
+NCC,PCA 20,4399,deer,dog,no
+NCC,PCA 20,4339,horse,truck,no
+1-NN,PCA 50,913,deer,deer,yes
+1-NN,PCA 50,7746,bird,bird,yes
+1-NN,PCA 50,4412,horse,bird,no
+1-NN,PCA 50,4343,dog,cat,no
+3-NN,PCA 50,899,dog,dog,yes
+3-NN,PCA 50,7700,frog,frog,yes
+3-NN,PCA 50,4431,automobile,airplane,no
+3-NN,PCA 50,4365,truck,airplane,no
+NCC,PCA 50,857,airplane,airplane,yes
+NCC,PCA 50,7683,airplane,airplane,yes
+NCC,PCA 50,4410,truck,automobile,no
+NCC,PCA 50,4350,deer,frog,no
+1-NN,PCA 100,939,ship,ship,yes
+1-NN,PCA 100,7760,bird,bird,yes
+1-NN,PCA 100,4355,airplane,frog,no
+1-NN,PCA 100,4296,ship,horse,no
+3-NN,PCA 100,895,automobile,automobile,yes
+3-NN,PCA 100,7727,frog,frog,yes
+3-NN,PCA 100,4414,bird,airplane,no
+3-NN,PCA 100,4354,horse,airplane,no
+NCC,PCA 100,861,frog,frog,yes
+NCC,PCA 100,7684,airplane,airplane,yes
+NCC,PCA 100,4408,airplane,deer,no
+NCC,PCA 100,4348,ship,truck,no
+1-NN,PCA 200,928,airplane,airplane,yes
+1-NN,PCA 200,7732,horse,horse,yes
+1-NN,PCA 200,4368,deer,cat,no
+1-NN,PCA 200,4304,frog,cat,no
+3-NN,PCA 200,917,ship,ship,yes
+3-NN,PCA 200,7700,frog,frog,yes
+3-NN,PCA 200,4411,dog,cat,no
+3-NN,PCA 200,4345,frog,dog,no
+NCC,PCA 200,864,airplane,airplane,yes
+NCC,PCA 200,7684,airplane,airplane,yes
+NCC,PCA 200,4408,airplane,deer,no
+NCC,PCA 200,4348,ship,truck,no
+1-NN,PCA 500,917,ship,ship,yes
+1-NN,PCA 500,7732,horse,horse,yes
+1-NN,PCA 500,4359,bird,deer,no
+1-NN,PCA 500,4299,bird,ship,no
+3-NN,PCA 500,908,ship,ship,yes
+3-NN,PCA 500,7678,ship,ship,yes
+3-NN,PCA 500,4432,horse,bird,no
+3-NN,PCA 500,4364,truck,airplane,no
+NCC,PCA 500,861,frog,frog,yes
+NCC,PCA 500,7684,airplane,airplane,yes
+NCC,PCA 500,4408,airplane,deer,no
+NCC,PCA 500,4348,ship,truck,no
