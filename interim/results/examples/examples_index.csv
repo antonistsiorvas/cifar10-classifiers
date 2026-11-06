@@ -11,6 +11,18 @@ NCC,raw,861,frog,frog,yes
 NCC,raw,7683,airplane,airplane,yes
 NCC,raw,4409,ship,dog,no
 NCC,raw,4349,airplane,automobile,no
+1-NN,PCA 10,911,cat,cat,yes
+1-NN,PCA 10,7725,deer,deer,yes
+1-NN,PCA 10,4447,airplane,automobile,no
+1-NN,PCA 10,4385,ship,airplane,no
+3-NN,PCA 10,911,cat,cat,yes
+3-NN,PCA 10,7698,airplane,airplane,yes
+3-NN,PCA 10,4427,bird,automobile,no
+3-NN,PCA 10,4363,truck,airplane,no
+NCC,PCA 10,854,airplane,airplane,yes
+NCC,PCA 10,7699,truck,truck,yes
+NCC,PCA 10,4401,automobile,frog,no
+NCC,PCA 10,4340,airplane,dog,no
 1-NN,PCA 20,948,cat,cat,yes
 1-NN,PCA 20,7757,frog,frog,yes
 1-NN,PCA 20,4393,cat,deer,no

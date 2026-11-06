@@ -50,7 +50,7 @@ def evaluate(name, classifier, x_train, y_train, x_test, y_test):
 
 EXAMPLES_DIR = Path(__file__).resolve().parent / "results" / "examples"
 PER_CLASS_CSV = Path(__file__).resolve().parent / "results" / "per_class_accuracy.csv"
-PCA_SIZES = [20, 50, 100, 200, 500]
+PCA_SIZES = [10, 20, 50, 100, 200, 500]
 # (title name, file name, classifier) for the three classifiers.
 CLASSIFIERS = [
     ("1-NN", "1nn", KNeighborsClassifier(n_neighbors=1)),
