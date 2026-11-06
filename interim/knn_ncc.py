@@ -11,6 +11,7 @@ Usage (from the repo root):
     python interim/knn_ncc.py --subset 1000   # quick run on the first 1000 test images
     python interim/knn_ncc.py --pca 100       # reduce to 100 dimensions with PCA first
     python interim/knn_ncc.py --examples      # also save example predictions (all settings)
+    python interim/knn_ncc.py --per-class     # also save per-class accuracy (all settings)
 """
 
 import argparse
@@ -45,9 +46,10 @@ def evaluate(name, classifier, x_train, y_train, x_test, y_test):
           f"train: {train_time:.2f} s   test: {test_time:.2f} s")
 
 
-# --- Example predictions (--examples) ---------------------------------------
+# --- All settings: example predictions (--examples), per-class accuracy (--per-class)
 
 EXAMPLES_DIR = Path(__file__).resolve().parent / "results" / "examples"
+PER_CLASS_CSV = Path(__file__).resolve().parent / "results" / "per_class_accuracy.csv"
 PCA_SIZES = [20, 50, 100, 200, 500]
 # (title name, file name, classifier) for the three classifiers.
 CLASSIFIERS = [
@@ -85,12 +87,15 @@ def save_examples(name, setting, filename, images, y_test, y_pred, class_names, 
     plt.close(fig)
 
 
-def run_examples(x_train, y_train, x_test, y_test):
-    """For every setting (raw, PCA k) and classifier, save example predictions."""
-    EXAMPLES_DIR.mkdir(parents=True, exist_ok=True)
+def run_all_settings(x_train, y_train, x_test, y_test, examples, per_class):
+    """Run every classifier on every setting (raw, PCA k) and save the requested
+    outputs: example figures (--examples) and/or per-class accuracy (--per-class)."""
     class_names = load_class_names()
     images = to_images(x_test)  # (N, 3072) -> (N, 32, 32, 3), already in [0, 1]
-    rows = []
+    example_rows = []
+    per_class_columns = {}  # "1-NN raw" -> list of 10 per-class accuracies
+    if examples:
+        EXAMPLES_DIR.mkdir(parents=True, exist_ok=True)
 
     for k in [None] + PCA_SIZES:
         # Transform the data once per setting; all three classifiers reuse it.
@@ -102,16 +107,36 @@ def run_examples(x_train, y_train, x_test, y_test):
             setting, tag = f"PCA {k}", f"pca{k}"
 
         for name, file_name, clf in CLASSIFIERS:
-            y_pred = clf.fit(xtr, y_train).predict(xte)
-            save_examples(name, setting, f"{file_name}_{tag}",
-                          images, y_test, y_pred, class_names, rows)
-            print(f"saved {file_name}_{tag}.png")
+            y_pred = clf.fit(xtr, y_train).predict(xte)  # predict once, use for both
 
-    with open(EXAMPLES_DIR / "examples_index.csv", "w", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow(["classifier", "setting", "test_index",
-                         "true_label", "predicted_label", "correct"])
-        writer.writerows(rows)
+            if examples:
+                save_examples(name, setting, f"{file_name}_{tag}",
+                              images, y_test, y_pred, class_names, example_rows)
+                print(f"saved {file_name}_{tag}.png")
+
+            if per_class:
+                # Accuracy of class c = fraction of test images of class c predicted as c.
+                accs = [np.mean(y_pred[y_test == c] == c) for c in range(len(class_names))]
+                per_class_columns[f"{name} {setting}"] = accs
+                print(f"{name:<4} {setting:<7} per class: "
+                      + " ".join(f"{a:.1%}" for a in accs))
+
+    if examples:
+        with open(EXAMPLES_DIR / "examples_index.csv", "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(["classifier", "setting", "test_index",
+                             "true_label", "predicted_label", "correct"])
+            writer.writerows(example_rows)
+
+    if per_class:
+        # One row per class, one column per classifier + setting (values in %).
+        with open(PER_CLASS_CSV, "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(["class"] + list(per_class_columns))
+            for c, class_name in enumerate(class_names):
+                writer.writerow([class_name] + [f"{100 * accs[c]:.2f}"
+                                                for accs in per_class_columns.values()])
+        print(f"saved {PER_CLASS_CSV.name}")
 
 
 def main():
@@ -120,6 +145,8 @@ def main():
     parser.add_argument("--pca", type=int, help="reduce the data to N dimensions with PCA")
     parser.add_argument("--examples", action="store_true",
                         help="save example predictions for every classifier and setting")
+    parser.add_argument("--per-class", action="store_true",
+                        help="save per-class accuracy for every classifier and setting")
     args = parser.parse_args()
 
     # 1. Load the data and scale pixels from 0..255 to 0..1.
@@ -129,7 +156,7 @@ def main():
     x_train = x_train / 255.0
     x_test = x_test / 255.0
     print(f"Train: {x_train.shape}, test: {x_test.shape}")
-    x_train_raw, x_test_raw = x_train, x_test  # kept for --examples (before PCA)
+    x_train_raw, x_test_raw = x_train, x_test  # kept for --examples / --per-class (before PCA)
 
     # 2. Optional: PCA, learned from the training data only.
     if args.pca:
@@ -143,9 +170,10 @@ def main():
     evaluate("3-NN", KNeighborsClassifier(n_neighbors=3), x_train, y_train, x_test, y_test)
     evaluate("NCC", NearestCentroid(), x_train, y_train, x_test, y_test)
 
-    # 4. Optional: example predictions for all classifiers and settings.
-    if args.examples:
-        run_examples(x_train_raw, y_train, x_test_raw, y_test)
+    # 4. Optional: example predictions and/or per-class accuracy for all settings.
+    if args.examples or args.per_class:
+        run_all_settings(x_train_raw, y_train, x_test_raw, y_test,
+                         args.examples, args.per_class)
 
 
 if __name__ == "__main__":
