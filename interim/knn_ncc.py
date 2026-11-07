@@ -16,7 +16,6 @@ Usage (from the repo root):
 
 import argparse
 import csv
-import pickle
 import sys
 import time
 from pathlib import Path
@@ -29,7 +28,7 @@ from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier, NearestCentroid
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from common.cifar10 import DATA_DIR, load_cifar10, to_images  # noqa: E402
+from common.cifar10 import CLASS_NAMES, load_cifar10, to_images  # noqa: E402
 
 
 def evaluate(name, classifier, x_train, y_train, x_test, y_test):
@@ -59,13 +58,6 @@ CLASSIFIERS = [
 ]
 
 
-def load_class_names():
-    """Read the class names from batches.meta (stored as bytes, e.g. b"cat")."""
-    with open(DATA_DIR / "cifar-10-batches-py" / "batches.meta", "rb") as f:
-        meta = pickle.load(f, encoding="bytes")
-    return [name.decode() for name in meta[b"label_names"]]
-
-
 def save_examples(name, setting, filename, images, y_test, y_pred, class_names, rows):
     """Save 2 correct + 2 wrong test images in one figure and add them to rows."""
     rng = np.random.default_rng(42)  # same seed for every figure -> reproducible
@@ -90,7 +82,7 @@ def save_examples(name, setting, filename, images, y_test, y_pred, class_names, 
 def run_all_settings(x_train, y_train, x_test, y_test, examples, per_class):
     """Run every classifier on every setting (raw, PCA k) and save the requested
     outputs: example figures (--examples) and/or per-class accuracy (--per-class)."""
-    class_names = load_class_names()
+    class_names = CLASS_NAMES
     images = to_images(x_test)  # (N, 3072) -> (N, 32, 32, 3), already in [0, 1]
     example_rows = []
     per_class_columns = {}  # "1-NN raw" -> list of 10 per-class accuracies
@@ -160,7 +152,7 @@ def main():
 
     # 2. Optional: PCA, learned from the training data only.
     if args.pca:
-        pca = PCA(n_components=args.pca)
+        pca = PCA(n_components=args.pca, random_state=42)  # same seed as run_all_settings
         x_train = pca.fit_transform(x_train)
         x_test = pca.transform(x_test)
         print(f"PCA keeps {pca.explained_variance_ratio_.sum():.1%} of the variance")

@@ -67,9 +67,9 @@ consistently higher than in the other settings, but still under 2 s.
 
 Fraction of the test images of each class (1,000 per class) that are classified
 correctly. Produced with `python interim/knn_ncc.py --per-class`, which also
-saves them to `results/per_class_accuracy.csv`. That run fixes the PCA random
-seed, so its per-class averages can differ from the overall accuracies above in
-the second decimal (e.g. 39.08% vs 39.10% for 1-NN, PCA 50).
+saves them to `results/per_class_accuracy.csv`. Every run fixes the PCA random
+seed (`random_state=42`), so the per-class averages match the overall
+accuracies above.
 
 #### 1-NN
 
