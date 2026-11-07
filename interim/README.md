@@ -41,26 +41,26 @@ and do not include fitting the PCA itself.
 | Setting | Variance kept | 1-NN | 3-NN | NCC |
 |---|---|---|---|---|
 | Raw pixels (3072) | 100% | 35.39% | 33.03% | 27.74% |
-| PCA 10 | 65.5% | 30.71% | 30.85% | 26.37% |
-| PCA 20 | 74.5% | 37.31% | 37.00% | 27.35% |
-| PCA 50 | 84.3% | **39.10%** | **37.63%** | 27.60% |
-| PCA 100 | 90.1% | 38.55% | 36.80% | 27.66% |
-| PCA 200 | 94.6% | 37.38% | 35.31% | 27.73% |
-| PCA 500 | 98.3% | 36.18% | 33.66% | 27.73% |
+| PCA 10 | 65.5% | 30.72% | 30.85% | 26.37% |
+| PCA 20 | 74.5% | 37.27% | 36.95% | 27.33% |
+| PCA 50 | 84.3% | **39.08%** | **37.47%** | 27.60% |
+| PCA 100 | 90.1% | 38.61% | 36.80% | 27.66% |
+| PCA 200 | 94.6% | 37.37% | 35.25% | 27.72% |
+| PCA 500 | 98.3% | 36.24% | 33.70% | 27.74% |
 
 ### Training and testing time (s)
 
 | Setting | 1-NN train | 1-NN test | 3-NN train | 3-NN test | NCC train | NCC test |
 |---|---|---|---|---|---|---|
-| Raw pixels (3072) | 0.12 | 22.06 | 0.16 | 20.58 | 2.67 | 0.11 |
-| PCA 10 | 0.07 | 0.77 | 0.06 | 1.04 | 0.02 | 1.79* |
-| PCA 20 | 0.01 | 1.98 | 0.01 | 0.48 | 0.03 | 0.01 |
-| PCA 50 | 0.02 | 1.50 | 0.01 | 0.75 | 0.06 | 0.01 |
-| PCA 100 | 0.02 | 1.94 | 0.02 | 1.24 | 0.10 | 0.01 |
-| PCA 200 | 0.05 | 2.61 | 0.04 | 1.84 | 0.16 | 0.01 |
-| PCA 500 | 0.09 | 5.58 | 0.09 | 4.64 | 0.39 | 0.04 |
+| Raw pixels (3072) | 0.11 | 21.65 | 0.14 | 20.46 | 2.43 | 0.13 |
+| PCA 10 | 0.09 | 1.45 | 0.10 | 1.28 | 0.04 | 0.89* |
+| PCA 20 | 0.01 | 1.33 | 0.01 | 0.56 | 0.03 | 0.01 |
+| PCA 50 | 0.01 | 1.46 | 0.01 | 0.71 | 0.06 | 0.01 |
+| PCA 100 | 0.04 | 1.81 | 0.03 | 1.04 | 0.10 | 0.01 |
+| PCA 200 | 0.05 | 2.57 | 0.04 | 1.78 | 0.15 | 0.01 |
+| PCA 500 | 0.09 | 4.55 | 0.09 | 3.77 | 0.33 | 0.02 |
 
-\* NCC's test time with PCA 10 was 0.75 s in a second run, so it is
+\* NCC's test time with PCA 10 was 0.75–1.79 s in earlier runs, so it is
 consistently higher than in the other settings, but still under 2 s.
 
 ### Per-class accuracy
@@ -119,19 +119,19 @@ accuracies above.
 ### Observations
 
 - 1-NN is the best classifier in every setting except PCA 10, where 3-NN is
-  marginally ahead (30.85% vs 30.71%). NCC is the worst everywhere, but still
+  marginally ahead (30.85% vs 30.72%). NCC is the worst everywhere, but still
   well above chance (10%).
 - PCA helps k-NN, but only with enough components. With PCA 10 (65.5% of the
-  variance) 1-NN drops to 30.71%, below raw pixels (35.39%). Accuracy then
-  rises to the best result, 1-NN with PCA 50 (39.10%), and keeping more
+  variance) 1-NN drops to 30.72%, below raw pixels (35.39%). Accuracy then
+  rises to the best result, 1-NN with PCA 50 (39.08%), and keeping more
   components moves it back towards the raw-pixel result.
-- NCC stays at 27.4–27.7% from PCA 20 upwards and drops only to 26.4% with
+- NCC stays at 27.3–27.7% from PCA 20 upwards and drops only to 26.4% with
   PCA 10, so PCA barely affects it.
 - k-NN does almost nothing during training (it only stores the data) and does
   all its work at test time. NCC is the other way round: training computes the
   10 class means, and testing only compares each image with those 10 means.
 - PCA makes k-NN testing about 4 to 40 times faster than on raw pixels
-  (20–22 s down to 0.5–5.6 s).
+  (20–22 s down to 0.6–4.6 s).
 - Per class, k-NN does best on ship and airplane (about 50–62% from PCA 20
   upwards), whose images often have plain blue backgrounds (sea, sky). Cat is
   poor in every setting (21–26%), and truck is the worst class on raw pixels
