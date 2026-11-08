@@ -127,7 +127,6 @@ def main():
         pca = PCA(n_components=args.pca, random_state=42)
         x_train = pca.fit_transform(x_train)
         x_test = pca.transform(x_test)
-        print(f"PCA keeps {pca.explained_variance_ratio_.sum():.1%} of the variance")
 
     evaluate("1-NN", KNeighborsClassifier(n_neighbors=1), x_train, y_train, x_test, y_test)
     evaluate("3-NN", KNeighborsClassifier(n_neighbors=3), x_train, y_train, x_test, y_test)

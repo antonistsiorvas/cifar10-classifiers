@@ -34,9 +34,8 @@ setting to `results/per_class_accuracy.csv`.
 
 ## Results
 
-Full official split: 50,000 training and 10,000 test images. "Variance kept" is
-the fraction of the training data's variance kept by PCA. Times are in seconds
-and do not include fitting the PCA itself.
+Full official split: 50,000 training and 10,000 test images. Times are in
+seconds and do not include fitting the PCA itself.
 
 ### Accuracy
 
@@ -49,15 +48,15 @@ It is computed on the 10,000 test images with scikit-learn's `score` method.
 Since every class has exactly 1,000 test images, it also equals the average of
 the per-class accuracies below.
 
-| Setting | Variance kept | 1-NN | 3-NN | NCC |
-|---|---|---|---|---|
-| Raw pixels (3072) | 100% | 35.39% | 33.03% | 27.74% |
-| PCA 10 | 65.5% | 30.72% | 30.85% | 26.37% |
-| PCA 20 | 74.5% | 37.27% | 36.95% | 27.33% |
-| PCA 50 | 84.3% | **39.08%** | **37.47%** | 27.60% |
-| PCA 100 | 90.1% | 38.61% | 36.80% | 27.66% |
-| PCA 200 | 94.6% | 37.37% | 35.25% | 27.72% |
-| PCA 500 | 98.3% | 36.24% | 33.70% | 27.74% |
+| Setting | 1-NN | 3-NN | NCC |
+|---|---|---|---|
+| Raw pixels (3072) | 35.39% | 33.03% | 27.74% |
+| PCA 10 | 30.72% | 30.85% | 26.37% |
+| PCA 20 | 37.27% | 36.95% | 27.33% |
+| PCA 50 | **39.08%** | **37.47%** | 27.60% |
+| PCA 100 | 38.61% | 36.80% | 27.66% |
+| PCA 200 | 37.37% | 35.25% | 27.72% |
+| PCA 500 | 36.24% | 33.70% | 27.74% |
 
 ### Training and testing time (s)
 
