@@ -64,15 +64,12 @@ the per-class accuracies below.
 | Setting | 1-NN train | 1-NN test | 3-NN train | 3-NN test | NCC train | NCC test |
 |---|---|---|---|---|---|---|
 | Raw pixels (3072) | 0.11 | 21.65 | 0.14 | 20.46 | 2.43 | 0.13 |
-| PCA 10 | 0.09 | 1.45 | 0.10 | 1.28 | 0.04 | 0.89* |
+| PCA 10 | 0.09 | 1.45 | 0.10 | 1.28 | 0.04 | 0.89 |
 | PCA 20 | 0.01 | 1.33 | 0.01 | 0.56 | 0.03 | 0.01 |
 | PCA 50 | 0.01 | 1.46 | 0.01 | 0.71 | 0.06 | 0.01 |
 | PCA 100 | 0.04 | 1.81 | 0.03 | 1.04 | 0.10 | 0.01 |
 | PCA 200 | 0.05 | 2.57 | 0.04 | 1.78 | 0.15 | 0.01 |
 | PCA 500 | 0.09 | 4.55 | 0.09 | 3.77 | 0.33 | 0.02 |
-
-\* NCC's test time with PCA 10 was 0.75–1.79 s in earlier runs, so it is
-consistently higher than in the other settings, but still under 2 s.
 
 ### Per-class accuracy
 
@@ -126,34 +123,3 @@ accuracies above.
 | horse | 16.60% | 14.60% | 16.00% | 16.40% | 16.30% | 16.60% | 16.60% |
 | ship | 37.00% | 36.70% | 36.50% | 37.20% | 36.80% | 36.90% | 37.00% |
 | truck | 40.70% | 40.30% | 40.60% | 40.50% | 40.60% | 40.60% | 40.60% |
-
-### Observations
-
-- 1-NN is the best classifier in every setting except PCA 10, where 3-NN is
-  marginally ahead (30.85% vs 30.72%). NCC is the worst everywhere, but still
-  well above chance (10%).
-- PCA helps k-NN, but only with enough components. With PCA 10 (65.5% of the
-  variance) 1-NN drops to 30.72%, below raw pixels (35.39%). Accuracy then
-  rises to the best result, 1-NN with PCA 50 (39.08%), and keeping more
-  components moves it back towards the raw-pixel result.
-- NCC stays at 27.3–27.7% from PCA 20 upwards and drops only to 26.4% with
-  PCA 10, so PCA barely affects it.
-- k-NN does almost nothing during training (it only stores the data) and does
-  all its work at test time. NCC is the other way round: training computes the
-  10 class means, and testing only compares each image with those 10 means.
-- PCA makes k-NN testing about 4 to 40 times faster than on raw pixels
-  (20–22 s down to 0.6–4.6 s).
-- Per class, k-NN does best on ship and airplane (about 50–62% from PCA 20
-  upwards), whose images often have plain blue backgrounds (sea, sky). Cat is
-  poor in every setting (21–26%), and truck is the worst class on raw pixels
-  (12–20%).
-- The classifiers fail on different classes. NCC is very weak on cat (3–6%),
-  bird and deer (8–12%), but beats k-NN on frog and truck (about 54%
-  and 41%). A single class mean cannot represent classes whose images vary a
-  lot.
-- PCA's gain for k-NN comes mostly from automobile, truck, horse and frog
-  (e.g. 1-NN automobile: 21.8% raw, 36.6% with PCA 20). Ship and deer instead
-  get clearly worse with few components (1-NN ship: 61.9% raw, 49.8% with
-  PCA 20).
-- 3-NN beats 1-NN on airplane, bird and automobile, but loses on frog, horse,
-  truck and dog, which explains its lower overall accuracy.
