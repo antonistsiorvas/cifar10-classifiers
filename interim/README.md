@@ -8,8 +8,10 @@ Compares three classifiers on CIFAR-10 using the official train/test split:
 - **3-NN**: majority vote of the 3 closest training images
 - **Nearest Class Centroid (NCC)**: each class is represented by the mean of its training images; a test image gets the class of the closest mean
 
-All three use Euclidean distance on raw pixels scaled to [0, 1]. They use
-scikit-learn's `KNeighborsClassifier` and `NearestCentroid` in [`knn_ncc.py`](knn_ncc.py).
+Pixels are scaled to [0, 1], and all three classifiers use Euclidean distance,
+computed either on the raw pixels (3072 dimensions) or, with `--pca`, on the
+PCA-reduced features. scikit-learn's `KNeighborsClassifier` and `NearestCentroid`
+were employed in [`knn_ncc.py`](knn_ncc.py).
 
 ## Run
 
@@ -37,6 +39,15 @@ the fraction of the training data's variance kept by PCA. Times are in seconds
 and do not include fitting the PCA itself.
 
 ### Accuracy
+
+Accuracy is the fraction of test images whose predicted class matches their
+true class:
+
+$$\text{accuracy} = \frac{\text{number of correctly classified test images}}{\text{total number of test images}}$$
+
+It is computed on the 10,000 test images with scikit-learn's `score` method.
+Since every class has exactly 1,000 test images, it also equals the average of
+the per-class accuracies below.
 
 | Setting | Variance kept | 1-NN | 3-NN | NCC |
 |---|---|---|---|---|

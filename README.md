@@ -3,6 +3,12 @@
 Coursework for the course «Neural Networks - Deep Learning» at Aristotle University of Thessaloniki (AUTh).
 All work uses the **CIFAR-10** dataset (10 classes, 32×32 colour images, 50,000 train / 10,000 test).
 
+## Goal
+
+The goal of this repo is to develop and benchmark machine learning and deep learning models on CIFAR-10.
+It uses a range of model architectures, from classical baselines such as k-NN and Nearest Class Centroid
+to neural networks such as MLPs and CNNs, and evaluates how well each one performs.
+
 ## Structure
 
 | Folder | Assignment | Due |
