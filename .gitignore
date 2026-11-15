@@ -8,6 +8,9 @@ __pycache__/
 venv/
 .ipynb_checkpoints/
 
+# Smoke-test outputs
+assignment-1/results_smoke/
+
 # Trained models / checkpoints
 *.pt
 *.pth
