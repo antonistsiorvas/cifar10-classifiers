@@ -5,128 +5,137 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from train import DEFAULTS, run
 
-ASSIGNMENT_DIR = Path(__file__).resolve().parent
-RESULTS_DIR = ASSIGNMENT_DIR / "results"
-SMOKE_DIR = ASSIGNMENT_DIR / "results_smoke"
+RESULTS_DIR = Path(__file__).resolve().parent / "results"
+SMOKE_DIR = Path(__file__).resolve().parent / "results_smoke"
 
-# Reference models; everything not listed uses the defaults in train.py
-# (ReLU, Adam, lr 1e-3, batch 128, unit, no augmentation/dropout/batchnorm)
-MLP_REF = {"model": "mlp", "hidden": [512, 512, 512], "norm": "unit"}
-CNN_REF = {"model": "cnn", "channels": [32, 64, 128], "kernel_size": 3, "pool": "max", "norm": "unit"}
-REFS = [("mlp", MLP_REF), ("cnn", CNN_REF)]
+# Reference models. Every run changes one thing; anything not given comes from DEFAULTS in
+# train.py (ReLU, Adam, lr 1e-3, batch 128, unit normalization, no augmentation/dropout/batchnorm).
+MLP_REF = {"model": "mlp", "hidden": [512, 512, 512]}
+CNN_REF = {"model": "cnn", "channels": [32, 64, 128], "kernel_size": 3, "pool": "max"}
 
-# Every experiment is a list of (run name, config); one factor changes at a time.
-# A configuration that appears twice inside one experiment (the reference) is run once.
+# E1: MLP width, one hidden layer
+E1 = [
+    {"name": "E1_mlp_h32", "model": "mlp", "hidden": [32]},
+    {"name": "E1_mlp_h64", "model": "mlp", "hidden": [64]},
+    {"name": "E1_mlp_h128", "model": "mlp", "hidden": [128]},
+    {"name": "E1_mlp_h256", "model": "mlp", "hidden": [256]},
+    {"name": "E1_mlp_h512", "model": "mlp", "hidden": [512]},
+    {"name": "E1_mlp_h1024", "model": "mlp", "hidden": [1024]},
+    {"name": "E1_mlp_h2048", "model": "mlp", "hidden": [2048]},
+]
 
+# E2: MLP depth (2, 3, 4 hidden layers) x width (64, 128, 256, 512)
+E2 = [
+    {"name": "E2_mlp_d2_w64", "model": "mlp", "hidden": [64, 64]},
+    {"name": "E2_mlp_d2_w128", "model": "mlp", "hidden": [128, 128]},
+    {"name": "E2_mlp_d2_w256", "model": "mlp", "hidden": [256, 256]},
+    {"name": "E2_mlp_d2_w512", "model": "mlp", "hidden": [512, 512]},
+    {"name": "E2_mlp_d3_w64", "model": "mlp", "hidden": [64, 64, 64]},
+    {"name": "E2_mlp_d3_w128", "model": "mlp", "hidden": [128, 128, 128]},
+    {"name": "E2_mlp_d3_w256", "model": "mlp", "hidden": [256, 256, 256]},
+    {"name": "E2_mlp_d3_w512", "model": "mlp", "hidden": [512, 512, 512]},
+    {"name": "E2_mlp_d4_w64", "model": "mlp", "hidden": [64, 64, 64, 64]},
+    {"name": "E2_mlp_d4_w128", "model": "mlp", "hidden": [128, 128, 128, 128]},
+    {"name": "E2_mlp_d4_w256", "model": "mlp", "hidden": [256, 256, 256, 256]},
+    {"name": "E2_mlp_d4_w512", "model": "mlp", "hidden": [512, 512, 512, 512]},
+]
 
-def e1_mlp_width():
-    return [(f"E1_mlp_h{w}", {"model": "mlp", "hidden": [w]})
-            for w in [32, 64, 128, 256, 512, 1024, 2048]]
+# E3: activation function, for both reference models
+E3 = [
+    {**MLP_REF, "name": "E3_mlp_sigmoid", "activation": "sigmoid"},
+    {**MLP_REF, "name": "E3_mlp_tanh", "activation": "tanh"},
+    {**MLP_REF, "name": "E3_mlp_relu", "activation": "relu"},
+    {**MLP_REF, "name": "E3_mlp_leaky_relu", "activation": "leaky_relu"},
+    {**MLP_REF, "name": "E3_mlp_elu", "activation": "elu"},
+    {**MLP_REF, "name": "E3_mlp_gelu", "activation": "gelu"},
+    {**CNN_REF, "name": "E3_cnn_sigmoid", "activation": "sigmoid"},
+    {**CNN_REF, "name": "E3_cnn_tanh", "activation": "tanh"},
+    {**CNN_REF, "name": "E3_cnn_relu", "activation": "relu"},
+    {**CNN_REF, "name": "E3_cnn_leaky_relu", "activation": "leaky_relu"},
+    {**CNN_REF, "name": "E3_cnn_elu", "activation": "elu"},
+    {**CNN_REF, "name": "E3_cnn_gelu", "activation": "gelu"},
+]
 
+# E4: input normalization (raw 0-255 vs unit 0-1), for both reference models
+E4 = [
+    {**MLP_REF, "name": "E4_mlp_raw", "norm": "raw"},
+    {**MLP_REF, "name": "E4_mlp_unit", "norm": "unit"},
+    {**CNN_REF, "name": "E4_cnn_raw", "norm": "raw"},
+    {**CNN_REF, "name": "E4_cnn_unit", "norm": "unit"},
+]
 
-def e2_mlp_depth():
-    return [(f"E2_mlp_d{d}_w{w}", {"model": "mlp", "hidden": [w] * d})
-            for d in [2, 3, 4] for w in [64, 128, 256, 512]]
+# E5: CNN variations, one change at a time from CNN_REF
+E5 = [
+    {**CNN_REF, "name": "E5_cnn_ref"},
+    {**CNN_REF, "name": "E5_cnn_k5", "kernel_size": 5},
+    {**CNN_REF, "name": "E5_cnn_k7", "kernel_size": 7},
+    {**CNN_REF, "name": "E5_cnn_ch16-32-64", "channels": [16, 32, 64]},
+    {**CNN_REF, "name": "E5_cnn_ch64-128-256", "channels": [64, 128, 256]},
+    {**CNN_REF, "name": "E5_cnn_ch32-64", "channels": [32, 64]},
+    {**CNN_REF, "name": "E5_cnn_ch32-64-128-256", "channels": [32, 64, 128, 256]},
+    {**CNN_REF, "name": "E5_cnn_avgpool", "pool": "avg"},
+    {**CNN_REF, "name": "E5_cnn_batchnorm", "batchnorm": True},
+    {**CNN_REF, "name": "E5_cnn_dropout0.25", "dropout": 0.25},
+    {**CNN_REF, "name": "E5_cnn_dropout0.5", "dropout": 0.5},
+    {**CNN_REF, "name": "E5_cnn_augment", "augment": True},
+]
 
+# E6: training parameters (learning rate, batch size, optimizer), for both reference models
+E6 = [
+    {**MLP_REF, "name": "E6_mlp_ref"},
+    {**MLP_REF, "name": "E6_mlp_lr1e-4", "lr": 1e-4},
+    {**MLP_REF, "name": "E6_mlp_lr1e-2", "lr": 1e-2},
+    {**MLP_REF, "name": "E6_mlp_bs32", "batch_size": 32},
+    {**MLP_REF, "name": "E6_mlp_bs512", "batch_size": 512},
+    {**MLP_REF, "name": "E6_mlp_sgd", "optimizer": "sgd"},
+    {**CNN_REF, "name": "E6_cnn_ref"},
+    {**CNN_REF, "name": "E6_cnn_lr1e-4", "lr": 1e-4},
+    {**CNN_REF, "name": "E6_cnn_lr1e-2", "lr": 1e-2},
+    {**CNN_REF, "name": "E6_cnn_bs32", "batch_size": 32},
+    {**CNN_REF, "name": "E6_cnn_bs512", "batch_size": 512},
+    {**CNN_REF, "name": "E6_cnn_sgd", "optimizer": "sgd"},
+]
 
-def e3_activations():
-    return [(f"E3_{tag}_{act}", {**ref, "activation": act})
-            for tag, ref in REFS
-            for act in ["sigmoid", "tanh", "relu", "leaky_relu", "elu", "gelu"]]
-
-
-def e4_normalization():
-    return [(f"E4_{tag}_{norm}", {**ref, "norm": norm})
-            for tag, ref in REFS
-            for norm in ["raw", "unit"]]
-
-
-def e5_cnn_variations():
-    return [
-        ("E5_cnn_ref", CNN_REF),  # kernel 3, channels x1, 3 blocks, max-pool, no BN/dropout/augmentation
-        ("E5_cnn_k5", {**CNN_REF, "kernel_size": 5}),
-        ("E5_cnn_k7", {**CNN_REF, "kernel_size": 7}),
-        ("E5_cnn_ch16-32-64", {**CNN_REF, "channels": [16, 32, 64]}),
-        ("E5_cnn_ch64-128-256", {**CNN_REF, "channels": [64, 128, 256]}),
-        ("E5_cnn_ch32-64", {**CNN_REF, "channels": [32, 64]}),
-        ("E5_cnn_ch32-64-128-256", {**CNN_REF, "channels": [32, 64, 128, 256]}),
-        ("E5_cnn_avgpool", {**CNN_REF, "pool": "avg"}),
-        ("E5_cnn_batchnorm", {**CNN_REF, "batchnorm": True}),
-        ("E5_cnn_dropout0.25", {**CNN_REF, "dropout": 0.25}),
-        ("E5_cnn_dropout0.5", {**CNN_REF, "dropout": 0.5}),
-        ("E5_cnn_augment", {**CNN_REF, "augment": True}),
-    ]
-
-
-def e6_training_parameters():
-    runs = []
-    for tag, ref in REFS:
-        runs += [
-            (f"E6_{tag}_ref", ref),  # Adam, lr 1e-3, batch 128
-            (f"E6_{tag}_lr1e-4", {**ref, "lr": 1e-4}),
-            (f"E6_{tag}_lr1e-2", {**ref, "lr": 1e-2}),
-            (f"E6_{tag}_bs32", {**ref, "batch_size": 32}),
-            (f"E6_{tag}_bs512", {**ref, "batch_size": 512}),
-            (f"E6_{tag}_sgd", {**ref, "optimizer": "sgd"}),
-        ]
-    return runs
-
-
-EXPERIMENTS = {
-    "E1": e1_mlp_width,
-    "E2": e2_mlp_depth,
-    "E3": e3_activations,
-    "E4": e4_normalization,
-    "E5": e5_cnn_variations,
-    "E6": e6_training_parameters,
-}
+EXPERIMENTS = {"E1": E1, "E2": E2, "E3": E3, "E4": E4, "E5": E5, "E6": E6}
 
 
 def main():
+    """Run the chosen experiments, skipping runs that already finished."""
     parser = argparse.ArgumentParser(description="Run the experiments E1-E6")
-    parser.add_argument("--exp", nargs="+", required=True,
-                        help="experiments to run, e.g. --exp E1 E3, or --exp all")
-    parser.add_argument("--dry-run", action="store_true", help="only list the runs")
+    parser.add_argument("--exp", nargs="+", required=True, help="e.g. --exp E1 E3, or --exp all")
     parser.add_argument("--smoke", action="store_true",
-                        help="tiny runs (2,000 training images, 2 epochs) into results_smoke/")
-    parser.add_argument("--force", action="store_true", help="rerun runs that already finished")
-    parser.add_argument("--verbose", action="store_true", help="print every epoch")
+                        help="quick test: 2,000 training images, 2 epochs, into results_smoke/")
     args = parser.parse_args()
 
-    names = list(EXPERIMENTS) if args.exp == ["all"] else [e.upper() for e in args.exp]
-    for e in names:
-        if e not in EXPERIMENTS:
-            parser.error(f"unknown experiment {e}, choose from {list(EXPERIMENTS)} or all")
-    out_dir = SMOKE_DIR if args.smoke else RESULTS_DIR
+    if args.exp == ["all"]:
+        names = list(EXPERIMENTS.keys())
+    else:
+        names = args.exp
+    if args.smoke:
+        out_dir = SMOKE_DIR
+    else:
+        out_dir = RESULTS_DIR
 
-    all_runs = [(e, name, cfg) for e in names for name, cfg in EXPERIMENTS[e]()]
-    print(f"{len(all_runs)} runs in {', '.join(names)} -> {out_dir}")
-    if args.dry_run:
-        for e in names:
-            print(f"  {e}: {sum(r[0] == e for r in all_runs)} runs")
-        # Runs are not deduplicated across experiments; this only counts distinct configurations
-        unique = {repr(sorted({**DEFAULTS, **cfg}.items())) for _, _, cfg in all_runs}
-        print(f"  total {len(all_runs)} runs, {len(unique)} unique configurations")
+    for exp in names:
+        print(f"=== {exp}: {len(EXPERIMENTS[exp])} runs ===")
+        for entry in EXPERIMENTS[exp]:
+            # Start from the defaults and overwrite what this run changes
+            config = {"experiment": exp, "name": entry["name"]}  # first columns of summary.csv
+            config.update(DEFAULTS)
+            config.update(entry)
+            if args.smoke:
+                config["train_subset"] = 2000
+                config["epochs"] = 2
 
-    for i, (experiment, name, cfg) in enumerate(all_runs, start=1):
-        config = {**cfg, "name": name, "experiment": experiment,
-                  "out_dir": str(out_dir), "verbose": args.verbose}
-        if args.smoke:
-            config.update(train_subset=2000, epochs=2)
-        prefix = f"[{i}/{len(all_runs)}] {name:<26}"
+            run_dir = out_dir / "runs" / config["name"]
+            if (run_dir / "metrics.json").exists():
+                print(f"{config['name']}: already done, skipping")
+                continue
 
-        if args.dry_run:
-            print(f"{prefix} {cfg}")
-            continue
-        # Resume: a run is finished once its metrics.json exists
-        if (out_dir / "runs" / name / "metrics.json").exists() and not args.force:
-            print(f"{prefix} already done, skipping")
-            continue
-
-        m = run(config)
-        print(f"{prefix} val {m['val_acc']:.2%}  test {m['test_acc']:.2%}  "
-              f"epochs {m['epochs_run']} (best {m['best_epoch']})  {m['train_time_s']:.1f} s",
-              flush=True)
+            print(f"{config['name']}:")
+            results = run(config, run_dir, out_dir / "summary.csv")
+            print(f"  -> val {results['val_acc']:.2%}  test {results['test_acc']:.2%}  "
+                  f"(best epoch {results['best_epoch']}, {results['train_time_s']:.1f} s)")
 
 
 if __name__ == "__main__":

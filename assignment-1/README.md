@@ -12,10 +12,10 @@ Framework: PyTorch. Runs on CPU or a CUDA GPU (selected automatically).
 
 | File | Contents |
 |---|---|
-| [`data.py`](data.py) | Loading, train/validation split, normalization, batching, data augmentation |
-| [`models.py`](models.py) | `MLP`, `CNN`, activation functions, parameter count |
-| [`train.py`](train.py) | Trains and evaluates one configuration (CLI, or `run(config)` from Python) |
-| [`experiments.py`](experiments.py) | Definitions of experiments E1–E6 and a runner |
+| [`data.py`](data.py) | Load CIFAR-10, train/validation split, normalization, data augmentation |
+| [`models.py`](models.py) | The `MLP` and `CNN` models |
+| [`train.py`](train.py) | Default settings, training loop, evaluation, saving the results of one run |
+| [`experiments.py`](experiments.py) | Experiments E1–E6 and the command line (the only entry point) |
 | `results/` | Output of the experiments (see [Outputs](#outputs)) |
 
 ## Setup
@@ -25,49 +25,34 @@ Framework: PyTorch. Runs on CPU or a CUDA GPU (selected automatically).
   Only the 45,000 are used for back-propagation; validation is used for early stopping;
   the 10,000 test images only for the final evaluation.
   The dataset is downloaded to `data/` automatically if it is missing.
-- **Normalization** (`--norm`): `raw` (0–255, no normalization) or `unit` (divide by 255,
-  as in the interim; the default).
-- **Data augmentation** (`--augment`, training batches only): random 32×32 crop from the
-  image padded with 4 zero pixels on each side, and random horizontal flip.
+- **Normalization:** `raw` (pixels 0–255, no normalization) or `unit` (pixels / 255, as in
+  the interim; the default).
+- **Data augmentation** (training batches only): random 32×32 crop from the image padded
+  with 4 zero pixels on each side, and random horizontal flip.
 - **Training:** cross-entropy loss, Adam or SGD (momentum 0.9), mini-batches in a new random
-  order every epoch, up to `--epochs` epochs with **early stopping** on the validation loss
-  (`--patience` epochs without improvement). At the end the weights of the best epoch are
+  order every epoch, up to 50 epochs with **early stopping** on the validation loss
+  (stop after 8 epochs without improvement). At the end the weights of the best epoch are
   restored and train / validation / test accuracy are computed with them.
 
 ## Run
 
-From the repo root.
-
-### One configuration
+From the repo root:
 
 ```bash
-python assignment-1/train.py --model mlp --hidden 512 512 512
-python assignment-1/train.py --model cnn --channels 32 64 128 --batchnorm --dropout 0.25 --augment
-python assignment-1/train.py --model mlp --hidden 512 --train-subset 10000 --epochs 5   # quick CPU check
-```
-
-Main options (defaults in brackets): `--model {mlp,cnn}` [mlp], `--hidden` [512 512 512],
-`--channels` [32 64 128], `--kernel-size` [3], `--pool {max,avg}` [max], `--batchnorm`,
-`--dropout` [0], `--augment`, `--activation` [relu], `--norm {raw,unit}` [unit],
-`--optimizer {adam,sgd}` [adam], `--lr` [1e-3], `--batch-size` [128], `--epochs` [50],
-`--patience` [8], `--seed` [42], `--train-subset N`, `--name`, `--out-dir`, `--save-model`.
-See `python assignment-1/train.py --help`.
-
-### Experiments
-
-```bash
-python assignment-1/experiments.py --exp all --dry-run   # list the runs
 python assignment-1/experiments.py --exp E1              # one experiment
 python assignment-1/experiments.py --exp E1 E3           # several
 python assignment-1/experiments.py --exp all             # everything
-python assignment-1/experiments.py --exp all --smoke     # smoke test: 2,000 images, 2 epochs
+python assignment-1/experiments.py --exp E1 --smoke      # quick test: 2,000 images, 2 epochs
 ```
 
-Runs whose `metrics.json` already exists are skipped, so after a disconnect the same
-command continues where it stopped. `--force` reruns them, `--verbose` prints every epoch.
-The smoke test writes to `results_smoke/` (gitignored).
+Runs whose `metrics.json` already exists are skipped, so after a disconnect (e.g. on Colab)
+the same command continues where it stopped. To rerun a run, delete its folder in
+`results/runs/` and its row in `results/summary.csv`.
+`--smoke` writes to `results_smoke/` (gitignored) instead of `results/`.
 
-One factor changes at a time; everything else stays at the default
+## Experiments
+
+One factor changes at a time; everything else stays at the defaults in `train.py`
 (ReLU, Adam, lr 1e-3, batch 128, max 50 epochs, patience 8, `unit` normalization, seed 42,
 no augmentation / dropout / batchnorm).
 Reference models: **MLP_REF** = 3 hidden layers × 512, **CNN_REF** = conv channels
@@ -87,11 +72,12 @@ Reference models: **MLP_REF** = 3 hidden layers × 512, **CNN_REF** = conv chann
 
 For every run, in `results/runs/<run_name>/`:
 
-- `history.csv`: per epoch, training loss/accuracy (running average over the epoch),
+- `history.csv`: per epoch, training loss/accuracy (average over the epoch),
   validation loss/accuracy and epoch time
-- `metrics.json`: the full config, final train/validation/test accuracy and loss, best
-  epoch, epochs run, training time, test inference time, number of parameters, device
+- `metrics.json`: the full config and the results: final train/validation/test accuracy,
+  test loss, best epoch, epochs run, training time, test inference time, number of
+  parameters, device
 - `test_predictions.npy`: the predicted label of each of the 10,000 test images
-- `model.pt`: the weights, only with `--save-model`
+- `test_probabilities.npy`: the predicted class probabilities (10,000 × 10, softmax)
 
-Plus one row per run in `results/summary.csv`.
+Plus one row per run (config + results) in `results/summary.csv`.
