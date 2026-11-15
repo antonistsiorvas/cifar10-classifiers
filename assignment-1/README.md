@@ -16,6 +16,7 @@ Framework: PyTorch. Runs on CPU or a CUDA GPU (selected automatically).
 | [`models.py`](models.py) | The `MLP` and `CNN` models |
 | [`train.py`](train.py) | Default settings, training loop, evaluation, saving the results of one run |
 | [`experiments.py`](experiments.py) | Experiments E1–E6 and the command line (the only entry point) |
+| [`colab_experiments.ipynb`](colab_experiments.ipynb) | Runs the experiments on Google Colab (see [Running on Colab](#running-on-colab)) |
 | `results/` | Output of the experiments (see [Outputs](#outputs)) |
 
 ## Setup
@@ -49,6 +50,26 @@ Runs whose `metrics.json` already exists are skipped, so after a disconnect (e.g
 the same command continues where it stopped. To rerun a run, delete its folder in
 `results/runs/` and its row in `results/summary.csv`.
 `--smoke` writes to `results_smoke/` (gitignored) instead of `results/`.
+
+## Running on Colab
+
+[`colab_experiments.ipynb`](colab_experiments.ipynb) runs all experiments on a free Colab T4 GPU
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/antonistsiorvas/cifar10-classifiers/blob/main/assignment-1/colab_experiments.ipynb)
+
+1. Open the notebook from GitHub in Colab (badge above) and select *Runtime → Change runtime
+   type → T4 GPU*.
+2. Run cells 1–6 (GPU check, mount Drive, clone the repo, install missing packages,
+   download CIFAR-10, link `assignment-1/results/` to
+   `MyDrive/cifar10-classifiers/assignment-1-results/`). Every finished run is written
+   straight to Drive.
+3. Cell 7 runs a smoke test of E1 and E5 and estimates the epoch times and the total time.
+4. Run the experiment cells (one per experiment, cheapest first: E1, E2, E4, E3, E6, E5),
+   in one session or across several.
+5. After a disconnect, run cells 1–6 again and continue with the next experiment cell:
+   finished runs are skipped, only the interrupted run starts again.
+6. Cell 9 shows `summary.csv` and how many runs are finished; cell 10 zips the Drive folder
+   into `MyDrive/cifar10-classifiers/results.zip` and downloads it. Extract it into
+   `assignment-1/results/` locally (it contains `runs/` and `summary.csv`) and commit.
 
 ## Experiments
 
