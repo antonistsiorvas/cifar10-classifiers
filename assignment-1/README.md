@@ -15,7 +15,7 @@ Framework: PyTorch. Runs on CPU or a CUDA GPU (selected automatically).
 | [`data.py`](data.py) | Load CIFAR-10, train/validation split, normalization, data augmentation |
 | [`models.py`](models.py) | The `MLP` and `CNN` models |
 | [`train.py`](train.py) | Default settings, training loop, evaluation, saving the results of one run |
-| [`experiments.py`](experiments.py) | Experiments E1–E6 and the command line (the only entry point) |
+| [`experiments.py`](experiments.py) | Experiments E1–E8 and the command line (the only entry point) |
 | [`colab_experiments.ipynb`](colab_experiments.ipynb) | Runs the experiments on Google Colab (see [Running on Colab](#running-on-colab)) |
 | `results/` | Output of the experiments (see [Outputs](#outputs)) |
 
@@ -31,7 +31,7 @@ Framework: PyTorch. Runs on CPU or a CUDA GPU (selected automatically).
 - **Data augmentation** (training batches only): random 32×32 crop from the image padded
   with 4 zero pixels on each side, and random horizontal flip.
 - **Training:** cross-entropy loss, Adam or SGD (momentum 0.9), mini-batches in a new random
-  order every epoch, up to 50 epochs with **early stopping** on the validation loss
+  order every epoch, up to 50 epochs (100 for E8) with **early stopping** on the validation loss
   (stop after 8 epochs without improvement). At the end the weights of the best epoch are
   restored and train / validation / test accuracy are computed with them.
 
@@ -63,7 +63,7 @@ the same command continues where it stopped. To rerun a run, delete its folder i
    `MyDrive/cifar10-classifiers/assignment-1-results/`). Every finished run is written
    straight to Drive.
 3. Cell 7 runs a smoke test of E1 and E5 and estimates the epoch times and the total time.
-4. Run the experiment cells (one per experiment, cheapest first: E1, E2, E4, E3, E6, E5),
+4. Run the experiment cells (one per experiment, cheapest first: E1, E2, E4, E3, E6, E5, then E7, E8),
    in one session or across several.
 5. After a disconnect, run cells 1–6 again and continue with the next experiment cell:
    finished runs are skipped, only the interrupted run starts again.
@@ -87,7 +87,9 @@ Reference models: **MLP_REF** = 3 hidden layers × 512, **CNN_REF** = conv chann
 | E4 | Input normalization: raw vs unit (MLP_REF and CNN_REF) | 4 |
 | E5 | CNN_REF variations: kernel 5/7, channels ×0.5/×2, 2/4 blocks, avg-pool, batchnorm, dropout 0.25/0.5, augmentation (+ the reference) | 12 |
 | E6 | Learning rate 1e-4/1e-2, batch size 32/512, SGD (+ the reference), for MLP_REF and CNN_REF | 12 |
-| | **Total** | **59** |
+| E7 | MLP with different width per layer: 4 decreasing/increasing mirrored pairs ([512,256], [256,128,64], [512,256,128], [1024,512,256] and their reverses) + [176,88,44] (same parameters as [128,256,512]) | 9 |
+| E8 | Combination of the best choices by validation: MLP_REF + ELU + lr 1e-4 + batch 512; CNN_REF + LeakyReLU + batchnorm + dropout 0.5 + augmentation; both up to 100 epochs | 2 |
+| | **Total** | **70** |
 
 ## Outputs
 

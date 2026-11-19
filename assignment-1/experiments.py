@@ -96,12 +96,35 @@ E6 = [
     {**CNN_REF, "name": "E6_cnn_sgd", "optimizer": "sgd"},
 ]
 
-EXPERIMENTS = {"E1": E1, "E2": E2, "E3": E3, "E4": E4, "E5": E5, "E6": E6}
+# E7: MLP with a different width per layer, decreasing vs increasing (mirrored pairs with the
+# same neurons), plus a decreasing net with about the same parameters as [128, 256, 512]
+E7 = [
+    {"name": "E7_mlp_512-256", "model": "mlp", "hidden": [512, 256]},
+    {"name": "E7_mlp_256-512", "model": "mlp", "hidden": [256, 512]},
+    {"name": "E7_mlp_256-128-64", "model": "mlp", "hidden": [256, 128, 64]},
+    {"name": "E7_mlp_64-128-256", "model": "mlp", "hidden": [64, 128, 256]},
+    {"name": "E7_mlp_512-256-128", "model": "mlp", "hidden": [512, 256, 128]},
+    {"name": "E7_mlp_128-256-512", "model": "mlp", "hidden": [128, 256, 512]},
+    {"name": "E7_mlp_1024-512-256", "model": "mlp", "hidden": [1024, 512, 256]},
+    {"name": "E7_mlp_256-512-1024", "model": "mlp", "hidden": [256, 512, 1024]},
+    {"name": "E7_mlp_176-88-44", "model": "mlp", "hidden": [176, 88, 44]},
+]
+
+# E8: combine the choices that improved the validation accuracy in E3, E5 and E6.
+# Up to 100 epochs, because regularization / a small learning rate converge slowly.
+E8 = [
+    {**MLP_REF, "name": "E8_mlp_best", "activation": "elu", "lr": 1e-4, "batch_size": 512,
+     "epochs": 100},
+    {**CNN_REF, "name": "E8_cnn_best", "activation": "leaky_relu", "batchnorm": True,
+     "dropout": 0.5, "augment": True, "epochs": 100},
+]
+
+EXPERIMENTS = {"E1": E1, "E2": E2, "E3": E3, "E4": E4, "E5": E5, "E6": E6, "E7": E7, "E8": E8}
 
 
 def main():
     """Run the chosen experiments, skipping runs that already finished."""
-    parser = argparse.ArgumentParser(description="Run the experiments E1-E6")
+    parser = argparse.ArgumentParser(description="Run the experiments E1-E8")
     parser.add_argument("--exp", nargs="+", required=True, help="e.g. --exp E1 E3, or --exp all")
     parser.add_argument("--smoke", action="store_true",
                         help="quick test: 2,000 training images, 2 epochs, into results_smoke/")
