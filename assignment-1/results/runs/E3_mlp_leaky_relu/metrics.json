@@ -1,0 +1,43 @@
+{
+  "config": {
+    "experiment": "E3",
+    "name": "E3_mlp_leaky_relu",
+    "model": "mlp",
+    "hidden": [
+      512,
+      512,
+      512
+    ],
+    "channels": [
+      32,
+      64,
+      128
+    ],
+    "kernel_size": 3,
+    "pool": "max",
+    "batchnorm": false,
+    "dropout": 0.0,
+    "augment": false,
+    "activation": "leaky_relu",
+    "norm": "unit",
+    "optimizer": "adam",
+    "lr": 0.001,
+    "batch_size": 128,
+    "epochs": 50,
+    "patience": 8,
+    "seed": 42,
+    "train_subset": null
+  },
+  "results": {
+    "train_acc": 0.5609333515167236,
+    "val_acc": 0.48420000076293945,
+    "test_acc": 0.4948999881744385,
+    "test_loss": 1.4200623413085938,
+    "best_epoch": 11,
+    "epochs_run": 19,
+    "train_time_s": 15.6368329740003,
+    "inference_time_s": 0.016685115000200312,
+    "n_params": 2103818,
+    "device": "cuda"
+  }
+}

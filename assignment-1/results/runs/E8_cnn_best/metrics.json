@@ -1,0 +1,43 @@
+{
+  "config": {
+    "experiment": "E8",
+    "name": "E8_cnn_best",
+    "model": "cnn",
+    "hidden": [
+      512,
+      512,
+      512
+    ],
+    "channels": [
+      32,
+      64,
+      128
+    ],
+    "kernel_size": 3,
+    "pool": "max",
+    "batchnorm": true,
+    "dropout": 0.5,
+    "augment": true,
+    "activation": "leaky_relu",
+    "norm": "unit",
+    "optimizer": "adam",
+    "lr": 0.001,
+    "batch_size": 128,
+    "epochs": 100,
+    "patience": 8,
+    "seed": 42,
+    "train_subset": null
+  },
+  "results": {
+    "train_acc": 0.8718667030334473,
+    "val_acc": 0.8315999507904053,
+    "test_acc": 0.8312999606132507,
+    "test_loss": 0.49432978515625,
+    "best_epoch": 50,
+    "epochs_run": 58,
+    "train_time_s": 217.280647734,
+    "inference_time_s": 0.12880961500013655,
+    "n_params": 620810,
+    "device": "cuda"
+  }
+}

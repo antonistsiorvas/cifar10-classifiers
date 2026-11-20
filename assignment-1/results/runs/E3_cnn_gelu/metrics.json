@@ -1,0 +1,43 @@
+{
+  "config": {
+    "experiment": "E3",
+    "name": "E3_cnn_gelu",
+    "model": "cnn",
+    "hidden": [
+      512,
+      512,
+      512
+    ],
+    "channels": [
+      32,
+      64,
+      128
+    ],
+    "kernel_size": 3,
+    "pool": "max",
+    "batchnorm": false,
+    "dropout": 0.0,
+    "augment": false,
+    "activation": "gelu",
+    "norm": "unit",
+    "optimizer": "adam",
+    "lr": 0.001,
+    "batch_size": 128,
+    "epochs": 50,
+    "patience": 8,
+    "seed": 42,
+    "train_subset": null
+  },
+  "results": {
+    "train_acc": 0.8727333545684814,
+    "val_acc": 0.7251999974250793,
+    "test_acc": 0.7211999893188477,
+    "test_loss": 0.8428402893066407,
+    "best_epoch": 6,
+    "epochs_run": 14,
+    "train_time_s": 27.97618420400022,
+    "inference_time_s": 0.1047485509998296,
+    "n_params": 620362,
+    "device": "cuda"
+  }
+}

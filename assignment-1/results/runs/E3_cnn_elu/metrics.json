@@ -1,0 +1,43 @@
+{
+  "config": {
+    "experiment": "E3",
+    "name": "E3_cnn_elu",
+    "model": "cnn",
+    "hidden": [
+      512,
+      512,
+      512
+    ],
+    "channels": [
+      32,
+      64,
+      128
+    ],
+    "kernel_size": 3,
+    "pool": "max",
+    "batchnorm": false,
+    "dropout": 0.0,
+    "augment": false,
+    "activation": "elu",
+    "norm": "unit",
+    "optimizer": "adam",
+    "lr": 0.001,
+    "batch_size": 128,
+    "epochs": 50,
+    "patience": 8,
+    "seed": 42,
+    "train_subset": null
+  },
+  "results": {
+    "train_acc": 0.8915333151817322,
+    "val_acc": 0.7387999892234802,
+    "test_acc": 0.7414999604225159,
+    "test_loss": 0.7843942810058594,
+    "best_epoch": 6,
+    "epochs_run": 14,
+    "train_time_s": 27.954228903000057,
+    "inference_time_s": 0.10562143899960574,
+    "n_params": 620362,
+    "device": "cuda"
+  }
+}

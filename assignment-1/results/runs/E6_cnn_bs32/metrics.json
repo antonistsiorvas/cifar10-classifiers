@@ -1,0 +1,43 @@
+{
+  "config": {
+    "experiment": "E6",
+    "name": "E6_cnn_bs32",
+    "model": "cnn",
+    "hidden": [
+      512,
+      512,
+      512
+    ],
+    "channels": [
+      32,
+      64,
+      128
+    ],
+    "kernel_size": 3,
+    "pool": "max",
+    "batchnorm": false,
+    "dropout": 0.0,
+    "augment": false,
+    "activation": "relu",
+    "norm": "unit",
+    "optimizer": "adam",
+    "lr": 0.001,
+    "batch_size": 32,
+    "epochs": 50,
+    "patience": 8,
+    "seed": 42,
+    "train_subset": null
+  },
+  "results": {
+    "train_acc": 0.8588444590568542,
+    "val_acc": 0.7419999837875366,
+    "test_acc": 0.7374999523162842,
+    "test_loss": 0.793606884765625,
+    "best_epoch": 6,
+    "epochs_run": 14,
+    "train_time_s": 56.22476118700024,
+    "inference_time_s": 0.1038171769996552,
+    "n_params": 620362,
+    "device": "cuda"
+  }
+}

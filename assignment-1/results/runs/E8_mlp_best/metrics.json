@@ -1,0 +1,43 @@
+{
+  "config": {
+    "experiment": "E8",
+    "name": "E8_mlp_best",
+    "model": "mlp",
+    "hidden": [
+      512,
+      512,
+      512
+    ],
+    "channels": [
+      32,
+      64,
+      128
+    ],
+    "kernel_size": 3,
+    "pool": "max",
+    "batchnorm": false,
+    "dropout": 0.0,
+    "augment": false,
+    "activation": "elu",
+    "norm": "unit",
+    "optimizer": "adam",
+    "lr": 0.0001,
+    "batch_size": 512,
+    "epochs": 100,
+    "patience": 8,
+    "seed": 42,
+    "train_subset": null
+  },
+  "results": {
+    "train_acc": 0.6133999824523926,
+    "val_acc": 0.5239999890327454,
+    "test_acc": 0.5357999801635742,
+    "test_loss": 1.3219606567382813,
+    "best_epoch": 62,
+    "epochs_run": 70,
+    "train_time_s": 15.504364719000023,
+    "inference_time_s": 0.015187860999958502,
+    "n_params": 2103818,
+    "device": "cuda"
+  }
+}

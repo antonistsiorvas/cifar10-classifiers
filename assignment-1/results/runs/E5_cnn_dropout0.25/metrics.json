@@ -1,0 +1,43 @@
+{
+  "config": {
+    "experiment": "E5",
+    "name": "E5_cnn_dropout0.25",
+    "model": "cnn",
+    "hidden": [
+      512,
+      512,
+      512
+    ],
+    "channels": [
+      32,
+      64,
+      128
+    ],
+    "kernel_size": 3,
+    "pool": "max",
+    "batchnorm": false,
+    "dropout": 0.25,
+    "augment": false,
+    "activation": "relu",
+    "norm": "unit",
+    "optimizer": "adam",
+    "lr": 0.001,
+    "batch_size": 128,
+    "epochs": 50,
+    "patience": 8,
+    "seed": 42,
+    "train_subset": null
+  },
+  "results": {
+    "train_acc": 0.9094889163970947,
+    "val_acc": 0.7730000019073486,
+    "test_acc": 0.7676999568939209,
+    "test_loss": 0.6959750305175781,
+    "best_epoch": 17,
+    "epochs_run": 25,
+    "train_time_s": 49.78159941600006,
+    "inference_time_s": 0.10807136299990816,
+    "n_params": 620362,
+    "device": "cuda"
+  }
+}

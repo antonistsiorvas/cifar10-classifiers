@@ -1,0 +1,43 @@
+{
+  "config": {
+    "experiment": "E3",
+    "name": "E3_mlp_gelu",
+    "model": "mlp",
+    "hidden": [
+      512,
+      512,
+      512
+    ],
+    "channels": [
+      32,
+      64,
+      128
+    ],
+    "kernel_size": 3,
+    "pool": "max",
+    "batchnorm": false,
+    "dropout": 0.0,
+    "augment": false,
+    "activation": "gelu",
+    "norm": "unit",
+    "optimizer": "adam",
+    "lr": 0.001,
+    "batch_size": 128,
+    "epochs": 50,
+    "patience": 8,
+    "seed": 42,
+    "train_subset": null
+  },
+  "results": {
+    "train_acc": 0.640666663646698,
+    "val_acc": 0.5055999755859375,
+    "test_acc": 0.5091999769210815,
+    "test_loss": 1.4130962768554687,
+    "best_epoch": 12,
+    "epochs_run": 20,
+    "train_time_s": 16.532572327000253,
+    "inference_time_s": 0.016832375999911164,
+    "n_params": 2103818,
+    "device": "cuda"
+  }
+}

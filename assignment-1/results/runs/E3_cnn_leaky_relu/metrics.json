@@ -1,0 +1,43 @@
+{
+  "config": {
+    "experiment": "E3",
+    "name": "E3_cnn_leaky_relu",
+    "model": "cnn",
+    "hidden": [
+      512,
+      512,
+      512
+    ],
+    "channels": [
+      32,
+      64,
+      128
+    ],
+    "kernel_size": 3,
+    "pool": "max",
+    "batchnorm": false,
+    "dropout": 0.0,
+    "augment": false,
+    "activation": "leaky_relu",
+    "norm": "unit",
+    "optimizer": "adam",
+    "lr": 0.001,
+    "batch_size": 128,
+    "epochs": 50,
+    "patience": 8,
+    "seed": 42,
+    "train_subset": null
+  },
+  "results": {
+    "train_acc": 0.8828222155570984,
+    "val_acc": 0.7511999607086182,
+    "test_acc": 0.7583000063896179,
+    "test_loss": 0.756279150390625,
+    "best_epoch": 8,
+    "epochs_run": 16,
+    "train_time_s": 31.759808950000206,
+    "inference_time_s": 0.10548358400001234,
+    "n_params": 620362,
+    "device": "cuda"
+  }
+}

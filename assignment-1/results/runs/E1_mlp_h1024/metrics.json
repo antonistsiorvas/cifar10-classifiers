@@ -1,0 +1,41 @@
+{
+  "config": {
+    "experiment": "E1",
+    "name": "E1_mlp_h1024",
+    "model": "mlp",
+    "hidden": [
+      1024
+    ],
+    "channels": [
+      32,
+      64,
+      128
+    ],
+    "kernel_size": 3,
+    "pool": "max",
+    "batchnorm": false,
+    "dropout": 0.0,
+    "augment": false,
+    "activation": "relu",
+    "norm": "unit",
+    "optimizer": "adam",
+    "lr": 0.001,
+    "batch_size": 128,
+    "epochs": 50,
+    "patience": 8,
+    "seed": 42,
+    "train_subset": null
+  },
+  "results": {
+    "train_acc": 0.597000002861023,
+    "val_acc": 0.5044000148773193,
+    "test_acc": 0.5085999965667725,
+    "test_loss": 1.40560439453125,
+    "best_epoch": 28,
+    "epochs_run": 36,
+    "train_time_s": 29.008919168000148,
+    "inference_time_s": 0.02261987500014584,
+    "n_params": 3157002,
+    "device": "cuda"
+  }
+}

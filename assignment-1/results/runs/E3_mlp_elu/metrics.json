@@ -1,0 +1,43 @@
+{
+  "config": {
+    "experiment": "E3",
+    "name": "E3_mlp_elu",
+    "model": "mlp",
+    "hidden": [
+      512,
+      512,
+      512
+    ],
+    "channels": [
+      32,
+      64,
+      128
+    ],
+    "kernel_size": 3,
+    "pool": "max",
+    "batchnorm": false,
+    "dropout": 0.0,
+    "augment": false,
+    "activation": "elu",
+    "norm": "unit",
+    "optimizer": "adam",
+    "lr": 0.001,
+    "batch_size": 128,
+    "epochs": 50,
+    "patience": 8,
+    "seed": 42,
+    "train_subset": null
+  },
+  "results": {
+    "train_acc": 0.6104000210762024,
+    "val_acc": 0.51419997215271,
+    "test_acc": 0.5234000086784363,
+    "test_loss": 1.3604797119140626,
+    "best_epoch": 13,
+    "epochs_run": 21,
+    "train_time_s": 17.21592874499993,
+    "inference_time_s": 0.016518735000317974,
+    "n_params": 2103818,
+    "device": "cuda"
+  }
+}

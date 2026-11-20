@@ -1,0 +1,43 @@
+{
+  "config": {
+    "experiment": "E6",
+    "name": "E6_mlp_bs32",
+    "model": "mlp",
+    "hidden": [
+      512,
+      512,
+      512
+    ],
+    "channels": [
+      32,
+      64,
+      128
+    ],
+    "kernel_size": 3,
+    "pool": "max",
+    "batchnorm": false,
+    "dropout": 0.0,
+    "augment": false,
+    "activation": "relu",
+    "norm": "unit",
+    "optimizer": "adam",
+    "lr": 0.001,
+    "batch_size": 32,
+    "epochs": 50,
+    "patience": 8,
+    "seed": 42,
+    "train_subset": null
+  },
+  "results": {
+    "train_acc": 0.5388666987419128,
+    "val_acc": 0.4779999852180481,
+    "test_acc": 0.4829999804496765,
+    "test_loss": 1.47028212890625,
+    "best_epoch": 12,
+    "epochs_run": 20,
+    "train_time_s": 66.53086967900026,
+    "inference_time_s": 0.01665484600016498,
+    "n_params": 2103818,
+    "device": "cuda"
+  }
+}

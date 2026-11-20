@@ -1,0 +1,44 @@
+{
+  "config": {
+    "experiment": "E2",
+    "name": "E2_mlp_d4_w256",
+    "model": "mlp",
+    "hidden": [
+      256,
+      256,
+      256,
+      256
+    ],
+    "channels": [
+      32,
+      64,
+      128
+    ],
+    "kernel_size": 3,
+    "pool": "max",
+    "batchnorm": false,
+    "dropout": 0.0,
+    "augment": false,
+    "activation": "relu",
+    "norm": "unit",
+    "optimizer": "adam",
+    "lr": 0.001,
+    "batch_size": 128,
+    "epochs": 50,
+    "patience": 8,
+    "seed": 42,
+    "train_subset": null
+  },
+  "results": {
+    "train_acc": 0.5707111358642578,
+    "val_acc": 0.5027999877929688,
+    "test_acc": 0.5020999908447266,
+    "test_loss": 1.3942416381835938,
+    "best_epoch": 14,
+    "epochs_run": 22,
+    "train_time_s": 17.553407164999953,
+    "inference_time_s": 0.0071315449999929115,
+    "n_params": 986634,
+    "device": "cuda"
+  }
+}

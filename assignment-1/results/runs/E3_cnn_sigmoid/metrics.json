@@ -1,0 +1,43 @@
+{
+  "config": {
+    "experiment": "E3",
+    "name": "E3_cnn_sigmoid",
+    "model": "cnn",
+    "hidden": [
+      512,
+      512,
+      512
+    ],
+    "channels": [
+      32,
+      64,
+      128
+    ],
+    "kernel_size": 3,
+    "pool": "max",
+    "batchnorm": false,
+    "dropout": 0.0,
+    "augment": false,
+    "activation": "sigmoid",
+    "norm": "unit",
+    "optimizer": "adam",
+    "lr": 0.001,
+    "batch_size": 128,
+    "epochs": 50,
+    "patience": 8,
+    "seed": 42,
+    "train_subset": null
+  },
+  "results": {
+    "train_acc": 0.7253555655479431,
+    "val_acc": 0.5929999947547913,
+    "test_acc": 0.6003000140190125,
+    "test_loss": 1.1435912841796876,
+    "best_epoch": 19,
+    "epochs_run": 27,
+    "train_time_s": 53.65436581899985,
+    "inference_time_s": 0.10579732200039871,
+    "n_params": 620362,
+    "device": "cuda"
+  }
+}

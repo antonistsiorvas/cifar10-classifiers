@@ -1,0 +1,43 @@
+{
+  "config": {
+    "experiment": "E3",
+    "name": "E3_mlp_sigmoid",
+    "model": "mlp",
+    "hidden": [
+      512,
+      512,
+      512
+    ],
+    "channels": [
+      32,
+      64,
+      128
+    ],
+    "kernel_size": 3,
+    "pool": "max",
+    "batchnorm": false,
+    "dropout": 0.0,
+    "augment": false,
+    "activation": "sigmoid",
+    "norm": "unit",
+    "optimizer": "adam",
+    "lr": 0.001,
+    "batch_size": 128,
+    "epochs": 50,
+    "patience": 8,
+    "seed": 42,
+    "train_subset": null
+  },
+  "results": {
+    "train_acc": 0.5271778106689453,
+    "val_acc": 0.48179998993873596,
+    "test_acc": 0.4967999756336212,
+    "test_loss": 1.426695947265625,
+    "best_epoch": 13,
+    "epochs_run": 21,
+    "train_time_s": 17.68533808899997,
+    "inference_time_s": 0.01694187599991892,
+    "n_params": 2103818,
+    "device": "cuda"
+  }
+}

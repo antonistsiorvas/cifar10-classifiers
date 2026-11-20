@@ -1,0 +1,43 @@
+{
+  "config": {
+    "experiment": "E5",
+    "name": "E5_cnn_k7",
+    "model": "cnn",
+    "hidden": [
+      512,
+      512,
+      512
+    ],
+    "channels": [
+      32,
+      64,
+      128
+    ],
+    "kernel_size": 7,
+    "pool": "max",
+    "batchnorm": false,
+    "dropout": 0.0,
+    "augment": false,
+    "activation": "relu",
+    "norm": "unit",
+    "optimizer": "adam",
+    "lr": 0.001,
+    "batch_size": 128,
+    "epochs": 50,
+    "patience": 8,
+    "seed": 42,
+    "train_subset": null
+  },
+  "results": {
+    "train_acc": 0.8068888783454895,
+    "val_acc": 0.6987999677658081,
+    "test_acc": 0.701200008392334,
+    "test_loss": 0.8660596008300782,
+    "best_epoch": 5,
+    "epochs_run": 13,
+    "train_time_s": 83.71695283400004,
+    "inference_time_s": 0.46509450699977606,
+    "n_params": 1033802,
+    "device": "cuda"
+  }
+}

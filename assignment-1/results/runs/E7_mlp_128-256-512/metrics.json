@@ -1,0 +1,43 @@
+{
+  "config": {
+    "experiment": "E7",
+    "name": "E7_mlp_128-256-512",
+    "model": "mlp",
+    "hidden": [
+      128,
+      256,
+      512
+    ],
+    "channels": [
+      32,
+      64,
+      128
+    ],
+    "kernel_size": 3,
+    "pool": "max",
+    "batchnorm": false,
+    "dropout": 0.0,
+    "augment": false,
+    "activation": "relu",
+    "norm": "unit",
+    "optimizer": "adam",
+    "lr": 0.001,
+    "batch_size": 128,
+    "epochs": 50,
+    "patience": 8,
+    "seed": 42,
+    "train_subset": null
+  },
+  "results": {
+    "train_acc": 0.582800030708313,
+    "val_acc": 0.501800000667572,
+    "test_acc": 0.5059999823570251,
+    "test_loss": 1.4086121826171876,
+    "best_epoch": 14,
+    "epochs_run": 22,
+    "train_time_s": 15.17147026900011,
+    "inference_time_s": 0.005839558999923611,
+    "n_params": 563082,
+    "device": "cuda"
+  }
+}
