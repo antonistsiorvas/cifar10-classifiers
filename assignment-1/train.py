@@ -35,6 +35,12 @@ DEFAULTS = {
     "train_subset": None,
 }
 
+# Settings that only one model type uses; written as "NA" in summary.csv for the other one
+MODEL_ONLY_SETTINGS = {
+    "mlp": ["hidden"],
+    "cnn": ["channels", "kernel_size", "pool", "batchnorm", "dropout"],
+}
+
 
 def train_one_epoch(model, optimizer, x, y, config):
     """One pass over the training data in a new random order; returns mean loss and accuracy."""
@@ -160,6 +166,9 @@ def run(config, run_dir, summary_path):
     np.save(run_dir / "test_predictions.npy", test_probs.argmax(axis=1))
 
     row = dict(config)
+    for model_type, keys in MODEL_ONLY_SETTINGS.items():
+        if model_type != config["model"]:
+            row.update({key: "NA" for key in keys})
     row.update(results)
     write_header = not summary_path.exists()
     with open(summary_path, "a", newline="") as f:
