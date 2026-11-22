@@ -2,6 +2,8 @@
 
 Due: 22 November 2026, 23:59
 
+Report: [Assignment_1_English.pdf](../reports/Assignment_1_English.pdf)
+
 Train feedforward networks (an MLP and a CNN) with back-propagation and compare them
 against the 1-NN, 3-NN and Nearest Class Centroid results from [the interim assignment](../interim/)
 (best: 1-NN 39.08%, 3-NN 37.47% with PCA 50, NCC ~27.7%).

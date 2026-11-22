@@ -2,6 +2,8 @@
 
 Due: 8 November 2026, 23:59
 
+Report: [Report_Interim_English.pdf](../reports/Report_Interim_English.pdf)
+
 Compares three classifiers on CIFAR-10 using the official train/test split:
 
 - **1-NN**: label of the closest training image

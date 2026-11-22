@@ -19,7 +19,16 @@ to neural networks such as MLPs and CNNs, and evaluates how well each one perfor
 | [`assignment-3/`](assignment-3/) | TBA | |
 | [`common/`](common/) | Code shared by all assignments (dataset loading) | |
 | `data/` | CIFAR-10 dataset (not in git, see [How to get the data](#how-to-get-the-data)) | |
-| [`report/`](report/) | Material for the written reports (references) | |
+| [`reports/`](reports/) | Deliverable reports (PDF) for each assignment (interim, 1, 2 and 3), plus shared references | |
+
+## Reports
+
+| Assignment | Report |
+|---|---|
+| Interim | [Report_Interim_English.pdf](reports/Report_Interim_English.pdf) |
+| Assignment 1 | [Assignment_1_English.pdf](reports/Assignment_1_English.pdf) |
+| Assignment 2 | TBA |
+| Assignment 3 | TBA |
 
 ## Setup
 
