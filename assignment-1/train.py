@@ -14,7 +14,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from data import augment, load_data
 from models import CNN, MLP
 
-# Settings used by every run unless the experiment changes them
 DEFAULTS = {
     "model": "mlp",
     "hidden": [512, 512, 512],
@@ -35,7 +34,6 @@ DEFAULTS = {
     "train_subset": None,
 }
 
-# Settings that only one model type uses; written as "NA" in summary.csv for the other one
 MODEL_ONLY_SETTINGS = {
     "mlp": ["hidden"],
     "cnn": ["channels", "kernel_size", "pool", "batchnorm", "dropout"],
@@ -43,7 +41,6 @@ MODEL_ONLY_SETTINGS = {
 
 
 def train_one_epoch(model, optimizer, x, y, config):
-    """One pass over the training data in a new random order; returns mean loss and accuracy."""
     model.train()
     order = torch.randperm(len(x), device=x.device)
     total_loss = 0.0
@@ -58,8 +55,8 @@ def train_one_epoch(model, optimizer, x, y, config):
         logits = model(xb)
         loss = F.cross_entropy(logits, yb)
         optimizer.zero_grad()
-        loss.backward()   # back-propagation
-        optimizer.step()  # update the weights
+        loss.backward()
+        optimizer.step()
 
         total_loss += loss.item() * len(yb)
         correct += (logits.argmax(dim=1) == yb).sum().item()
@@ -67,7 +64,6 @@ def train_one_epoch(model, optimizer, x, y, config):
 
 
 def evaluate(model, x, y):
-    """Mean loss, accuracy and class probabilities on (x, y), without training."""
     model.eval()
     total_loss = 0.0
     all_probs = []
@@ -76,7 +72,6 @@ def evaluate(model, x, y):
             xb = x[start:start + 1000]
             yb = y[start:start + 1000]
             logits = model(xb)
-            # .item() waits for the GPU to finish, so the timings around evaluate() are correct
             total_loss += F.cross_entropy(logits, yb, reduction="sum").item()
             all_probs.append(F.softmax(logits, dim=1))
     probs = torch.cat(all_probs)
@@ -85,7 +80,6 @@ def evaluate(model, x, y):
 
 
 def run(config, run_dir, summary_path):
-    """Train one model with early stopping, evaluate it and save all its results."""
     random.seed(config["seed"])
     torch.manual_seed(config["seed"])
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -108,7 +102,6 @@ def run(config, run_dir, summary_path):
     for p in model.parameters():
         n_params += p.numel()
 
-    # Train, keeping a copy of the weights with the lowest validation loss
     history = []
     best_val_loss = float("inf")
     best_epoch = 0
@@ -133,7 +126,6 @@ def run(config, run_dir, summary_path):
             break
     train_time = time.perf_counter() - train_start
 
-    # Final evaluation with the best weights
     model.load_state_dict(best_weights)
     _, train_acc, _ = evaluate(model, x_train, y_train)
     _, val_acc, _ = evaluate(model, x_val, y_val)
@@ -154,7 +146,6 @@ def run(config, run_dir, summary_path):
         "device": str(device),
     }
 
-    # Save everything; metrics.json is written last because it marks the run as finished
     run_dir.mkdir(parents=True, exist_ok=True)
     with open(run_dir / "history.csv", "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=list(history[0].keys()))

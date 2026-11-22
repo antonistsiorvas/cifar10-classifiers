@@ -11,11 +11,10 @@ ACTIVATIONS = {
 
 
 class MLP(nn.Module):
-    """3072 pixels -> hidden layers (Linear + activation) -> 10 class scores."""
 
     def __init__(self, hidden, activation):
         super().__init__()
-        layers = [nn.Flatten()]  # N x 3 x 32 x 32 -> N x 3072
+        layers = [nn.Flatten()]
         in_size = 3 * 32 * 32
         for size in hidden:
             layers.append(nn.Linear(in_size, size))
@@ -29,15 +28,13 @@ class MLP(nn.Module):
 
 
 class CNN(nn.Module):
-    """Conv blocks (conv -> [batchnorm] -> activation -> 2x2 pool), then a 256-unit hidden layer -> 10 scores."""
 
     def __init__(self, channels, kernel_size, pool, batchnorm, dropout, activation):
         super().__init__()
         layers = []
         in_channels = 3
-        size = 32  # image height and width
+        size = 32
         for out_channels in channels:
-            # padding="same" keeps the size, so only pooling shrinks the image
             layers.append(nn.Conv2d(in_channels, out_channels, kernel_size, padding="same"))
             if batchnorm:
                 layers.append(nn.BatchNorm2d(out_channels))
@@ -50,7 +47,7 @@ class CNN(nn.Module):
             size = size // 2
 
         layers.append(nn.Flatten())
-        layers.append(nn.Dropout(dropout))  # dropout 0 does nothing
+        layers.append(nn.Dropout(dropout))
         layers.append(nn.Linear(in_channels * size * size, 256))
         layers.append(ACTIVATIONS[activation]())
         layers.append(nn.Dropout(dropout))

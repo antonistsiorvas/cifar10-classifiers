@@ -8,12 +8,9 @@ from train import DEFAULTS, run
 RESULTS_DIR = Path(__file__).resolve().parent / "results"
 SMOKE_DIR = Path(__file__).resolve().parent / "results_smoke"
 
-# Reference models. Every run changes one thing; anything not given comes from DEFAULTS in
-# train.py (ReLU, Adam, lr 1e-3, batch 128, unit normalization, no augmentation/dropout/batchnorm).
 MLP_REF = {"model": "mlp", "hidden": [512, 512, 512]}
 CNN_REF = {"model": "cnn", "channels": [32, 64, 128], "kernel_size": 3, "pool": "max"}
 
-# E1: MLP width, one hidden layer
 E1 = [
     {"name": "E1_mlp_h32", "model": "mlp", "hidden": [32]},
     {"name": "E1_mlp_h64", "model": "mlp", "hidden": [64]},
@@ -24,7 +21,6 @@ E1 = [
     {"name": "E1_mlp_h2048", "model": "mlp", "hidden": [2048]},
 ]
 
-# E2: MLP depth (2, 3, 4 hidden layers) x width (64, 128, 256, 512)
 E2 = [
     {"name": "E2_mlp_d2_w64", "model": "mlp", "hidden": [64, 64]},
     {"name": "E2_mlp_d2_w128", "model": "mlp", "hidden": [128, 128]},
@@ -40,7 +36,6 @@ E2 = [
     {"name": "E2_mlp_d4_w512", "model": "mlp", "hidden": [512, 512, 512, 512]},
 ]
 
-# E3: activation function, for both reference models
 E3 = [
     {**MLP_REF, "name": "E3_mlp_sigmoid", "activation": "sigmoid"},
     {**MLP_REF, "name": "E3_mlp_tanh", "activation": "tanh"},
@@ -56,7 +51,6 @@ E3 = [
     {**CNN_REF, "name": "E3_cnn_gelu", "activation": "gelu"},
 ]
 
-# E4: input normalization (raw 0-255 vs unit 0-1), for both reference models
 E4 = [
     {**MLP_REF, "name": "E4_mlp_raw", "norm": "raw"},
     {**MLP_REF, "name": "E4_mlp_unit", "norm": "unit"},
@@ -64,7 +58,6 @@ E4 = [
     {**CNN_REF, "name": "E4_cnn_unit", "norm": "unit"},
 ]
 
-# E5: CNN variations, one change at a time from CNN_REF
 E5 = [
     {**CNN_REF, "name": "E5_cnn_ref"},
     {**CNN_REF, "name": "E5_cnn_k5", "kernel_size": 5},
@@ -80,7 +73,6 @@ E5 = [
     {**CNN_REF, "name": "E5_cnn_augment", "augment": True},
 ]
 
-# E6: training parameters (learning rate, batch size, optimizer), for both reference models
 E6 = [
     {**MLP_REF, "name": "E6_mlp_ref"},
     {**MLP_REF, "name": "E6_mlp_lr1e-4", "lr": 1e-4},
@@ -96,8 +88,6 @@ E6 = [
     {**CNN_REF, "name": "E6_cnn_sgd", "optimizer": "sgd"},
 ]
 
-# E7: MLP with a different width per layer, decreasing vs increasing (mirrored pairs with the
-# same neurons), plus a decreasing net with about the same parameters as [128, 256, 512]
 E7 = [
     {"name": "E7_mlp_512-256", "model": "mlp", "hidden": [512, 256]},
     {"name": "E7_mlp_256-512", "model": "mlp", "hidden": [256, 512]},
@@ -110,8 +100,6 @@ E7 = [
     {"name": "E7_mlp_176-88-44", "model": "mlp", "hidden": [176, 88, 44]},
 ]
 
-# E8: combine the choices that improved the validation accuracy in E3, E5 and E6.
-# Up to 100 epochs, because regularization / a small learning rate converge slowly.
 E8 = [
     {**MLP_REF, "name": "E8_mlp_best", "activation": "elu", "lr": 1e-4, "batch_size": 512,
      "epochs": 100},
@@ -123,7 +111,6 @@ EXPERIMENTS = {"E1": E1, "E2": E2, "E3": E3, "E4": E4, "E5": E5, "E6": E6, "E7":
 
 
 def main():
-    """Run the chosen experiments, skipping runs that already finished."""
     parser = argparse.ArgumentParser(description="Run the experiments E1-E8")
     parser.add_argument("--exp", nargs="+", required=True, help="e.g. --exp E1 E3, or --exp all")
     parser.add_argument("--smoke", action="store_true",
@@ -142,8 +129,7 @@ def main():
     for exp in names:
         print(f"=== {exp}: {len(EXPERIMENTS[exp])} runs ===")
         for entry in EXPERIMENTS[exp]:
-            # Start from the defaults and overwrite what this run changes
-            config = {"experiment": exp, "name": entry["name"]}  # first columns of summary.csv
+            config = {"experiment": exp, "name": entry["name"]}
             config.update(DEFAULTS)
             config.update(entry)
             if args.smoke:
